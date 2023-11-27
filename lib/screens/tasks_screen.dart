@@ -1,21 +1,11 @@
 import 'package:flutter/material.dart';
 import '../widgets/task_list.dart';
 import 'add_task_screen.dart';
-import '../models/task.dart';
+import 'package:provider/provider.dart';
+import '../models/task_data.dart';
 
-class TaskScreen extends StatefulWidget {
+class TaskScreen extends StatelessWidget {
   const TaskScreen({super.key});
-
-  @override
-  State<TaskScreen> createState() => _TaskScreenState();
-}
-
-class _TaskScreenState extends State<TaskScreen> {
-  List<Task> tasks = [
-    Task(name: 'Buy milk'),
-    Task(name: 'Buy eggs'),
-    Task(name: 'Buy bread'),
-  ];
 
   @override
   Widget build(BuildContext context) {
@@ -32,9 +22,9 @@ class _TaskScreenState extends State<TaskScreen> {
                 padding: EdgeInsets.only(
                     bottom: MediaQuery.of(context).viewInsets.bottom),
                 child: AddTaskScreen(addTaskCallback: (newTaskTitle) {
-                  setState(() {
-                    tasks.add(Task(name: newTaskTitle));
-                  });
+                  // setState(() {
+                  //   tasks.add(Task(name: newTaskTitle));
+                  // });
                   Navigator.pop(context);
                 }),
               ),
@@ -71,7 +61,7 @@ class _TaskScreenState extends State<TaskScreen> {
                   ),
                 ),
                 Text(
-                  '${tasks.length} Tasks',
+                  '${Provider.of<TaskData>(context).taskCount} Tasks',
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 18.0,
@@ -93,63 +83,11 @@ class _TaskScreenState extends State<TaskScreen> {
                   topRight: Radius.circular(20.0),
                 ),
               ),
-              child: TaskList(tasks: tasks),
+              child: const TaskList(),
             ),
           ),
         ],
       ),
-    );
-  }
-}
-
-class ToDoListView extends StatefulWidget {
-  const ToDoListView({super.key});
-
-  @override
-  _ToDoListViewState createState() => _ToDoListViewState();
-}
-
-class _ToDoListViewState extends State<ToDoListView> {
-  List<String> tasks = [
-    'Task 1',
-    'Task 2',
-    'Task 3',
-    // Add more tasks here
-  ];
-
-  List<bool> taskCompleted = List<bool>.generate(
-    3,
-    (index) => false,
-  );
-
-  @override
-  Widget build(BuildContext context) {
-    return ListView.builder(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 20.0,
-        vertical: 20.0,
-      ),
-      itemCount: tasks.length,
-      itemBuilder: (BuildContext context, int index) {
-        return ListTile(
-          title: Text(
-            tasks[index],
-            style: TextStyle(
-              decoration: taskCompleted[index]
-                  ? TextDecoration.lineThrough
-                  : TextDecoration.none,
-            ),
-          ),
-          trailing: Checkbox(
-            value: taskCompleted[index],
-            onChanged: (bool? value) {
-              setState(() {
-                taskCompleted[index] = value ?? false;
-              });
-            },
-          ),
-        );
-      },
     );
   }
 }
